@@ -5,10 +5,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.74"
     }
-    modtm = {
-      source  = "azure/modtm"
-      version = "~> 0.3"
-    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.5"
@@ -24,8 +20,8 @@ provider "azurerm" {
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
-  source  = "Azure/avm-utl-regions/azurerm"
-  version = "~> 0.1"
+  source  = "Azure/regions/azurerm"
+  version = "~> 0.3"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -82,6 +78,8 @@ module "test" {
   location = azurerm_resource_group.this.location
   key_vault_key_id = azurerm_key_vault_key.example.id
   key_vault_resource_id = module.avm-res-keyvault-vault.key_vault_id
+  auto_key_rotation_enabled = true
+
 }
 
 
