@@ -48,23 +48,18 @@ resource "azurerm_resource_group" "this" {
 }
 
 module "avm-res-keyvault-vault" {
-  source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.7.3"
-  name = "test-keyvault"
-  location = "West Europe"
-  resource_group_name = "test-disk-encryption-set"
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  sku_name = "standard"
+  source                      = "Azure/avm-res-keyvault-vault/azurerm"
+  version                     = "0.7.3"
+  name                        = "test-keyvault"
+  location                    = "West Europe"
+  resource_group_name         = "test-disk-encryption-set"
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  sku_name                    = "standard"
   enabled_for_disk_encryption = true
-  purge_protection_enabled = false
+  purge_protection_enabled    = false
 }
 
 resource "azurerm_key_vault_key" "example" {
-  name         = "des-example-key"
-  key_vault_id = module.avm-res-keyvault-vault.key_vault_id
-  key_type     = "RSA"
-  key_size     = 2048
-
   key_opts = [
     "decrypt",
     "encrypt",
@@ -73,14 +68,18 @@ resource "azurerm_key_vault_key" "example" {
     "verify",
     "wrapKey",
   ]
+  key_type     = "RSA"
+  key_vault_id = module.avm-res-keyvault-vault.key_vault_id
+  name         = "des-example-key"
+  key_size     = 2048
 }
 
 module "test" {
-  source = "../../"
-  name = "test"
-  resource_group_name = azurerm_resource_group.this.name
-  location = azurerm_resource_group.this.location
-  key_vault_key_id = azurerm_key_vault_key.example.id
+  source                = "../../"
+  name                  = "test"
+  resource_group_name   = azurerm_resource_group.this.name
+  location              = azurerm_resource_group.this.location
+  key_vault_key_id      = azurerm_key_vault_key.example.id
   key_vault_resource_id = module.avm-res-keyvault-vault.key_vault_id
 }
 
