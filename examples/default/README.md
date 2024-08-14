@@ -53,20 +53,43 @@ resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
 }
 
-# This is the module call
-# Do not specify location here due to the randomization above.
-# Leaving location as `null` will cause the module to use the resource group location
-# with a data source.
-module "test" {
-  source = "../../"
-  # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
-  # ...
-  location            = azurerm_resource_group.this.location
-  name                = "TODO" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
-  resource_group_name = azurerm_resource_group.this.name
-
-  enable_telemetry = var.enable_telemetry # see variables.tf
+module "avm-res-keyvault-vault" {
+  source                      = "Azure/avm-res-keyvault-vault/azurerm"
+  version                     = "0.7.3"
+  name                        = "test-keyvault"
+  location                    = "West Europe"
+  resource_group_name         = "test-disk-encryption-set"
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  sku_name                    = "standard"
+  enabled_for_disk_encryption = true
+  purge_protection_enabled    = false
 }
+
+resource "azurerm_key_vault_key" "example" {
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
+  ]
+  key_type     = "RSA"
+  key_vault_id = module.avm-res-keyvault-vault.key_vault_id
+  name         = "des-example-key"
+  key_size     = 2048
+}
+
+module "test" {
+  source                = "../../"
+  name                  = "test"
+  resource_group_name   = azurerm_resource_group.this.name
+  location              = azurerm_resource_group.this.location
+  key_vault_key_id      = azurerm_key_vault_key.example.id
+  key_vault_resource_id = module.avm-res-keyvault-vault.key_vault_id
+}
+
+
 ```
 
 <!-- markdownlint-disable MD033 -->
@@ -86,6 +109,7 @@ The following requirements are needed by this module:
 
 The following resources are used by this module:
 
+- [azurerm_key_vault_key.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
@@ -115,6 +139,12 @@ No outputs.
 ## Modules
 
 The following Modules are called:
+
+### <a name="module_avm-res-keyvault-vault"></a> [avm-res-keyvault-vault](#module\_avm-res-keyvault-vault)
+
+Source: Azure/avm-res-keyvault-vault/azurerm
+
+Version: 0.7.3
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
