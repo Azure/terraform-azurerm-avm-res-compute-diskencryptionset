@@ -24,8 +24,6 @@ module "regions" {
   version = "~> 0.3"
 }
 
-data "azurerm_client_config" "current" {}
-
 # This allows us to randomize the region for the resource group.
 resource "random_integer" "region_index" {
   max = length(module.regions.regions) - 1
@@ -51,7 +49,7 @@ module "avm-res-keyvault-vault" {
   name                        = "test-keyvault"
   location                    = "West Europe"
   resource_group_name         = "test-disk-encryption-set"
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  tenant_id                   = "5709bb5e-e575-4c99-ae8f-b36af76030f1"
   sku_name                    = "standard"
   enabled_for_disk_encryption = true
   purge_protection_enabled    = false
