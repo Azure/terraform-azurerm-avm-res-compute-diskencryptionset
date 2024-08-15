@@ -24,6 +24,9 @@ module "regions" {
   version = "~> 0.3"
 }
 
+data "azurerm_client_config" "current" {
+}
+
 # This allows us to randomize the region for the resource group.
 resource "random_integer" "region_index" {
   max = length(module.regions.regions) - 1
