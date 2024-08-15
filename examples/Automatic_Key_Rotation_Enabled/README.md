@@ -30,6 +30,8 @@ module "regions" {
   version = "~> 0.3"
 }
 
+data "azurerm_client_config" "current" {}
+
 # This allows us to randomize the region for the resource group.
 resource "random_integer" "region_index" {
   max = length(module.regions.regions) - 1
@@ -71,7 +73,7 @@ resource "azurerm_key_vault_key" "example" {
     "wrapKey",
   ]
   key_type     = "RSA"
-  key_vault_id = module.avm-res-keyvault-vault.key_vault_id
+  key_vault_id = module.avm-res-keyvault-vault.resource_id
   name         = "des-example-key"
   key_size     = 2048
 }
@@ -82,7 +84,7 @@ module "test" {
   resource_group_name       = azurerm_resource_group.this.name
   location                  = azurerm_resource_group.this.location
   key_vault_key_id          = azurerm_key_vault_key.example.id
-  key_vault_resource_id     = module.avm-res-keyvault-vault.key_vault_id
+  key_vault_resource_id     = module.avm-res-keyvault-vault.resource_id
   auto_key_rotation_enabled = true
 
 }
@@ -108,6 +110,7 @@ The following resources are used by this module:
 - [azurerm_key_vault_key.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs

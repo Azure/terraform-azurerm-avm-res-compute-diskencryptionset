@@ -24,8 +24,7 @@ module "regions" {
   version = "~> 0.3"
 }
 
-data "azurerm_client_config" "current" {
-}
+data "azurerm_client_config" "current" {}
 
 # This allows us to randomize the region for the resource group.
 resource "random_integer" "region_index" {
@@ -68,7 +67,7 @@ resource "azurerm_key_vault_key" "example" {
     "wrapKey",
   ]
   key_type     = "RSA"
-  key_vault_id = module.avm-res-keyvault-vault.key_vault_id
+  key_vault_id = module.avm-res-keyvault-vault.resource_id
   name         = "des-example-key"
   key_size     = 2048
 }
@@ -79,7 +78,7 @@ module "test" {
   resource_group_name       = azurerm_resource_group.this.name
   location                  = azurerm_resource_group.this.location
   key_vault_key_id          = azurerm_key_vault_key.example.id
-  key_vault_resource_id     = module.avm-res-keyvault-vault.key_vault_id
+  key_vault_resource_id     = module.avm-res-keyvault-vault.resource_id
   auto_key_rotation_enabled = true
 
 }

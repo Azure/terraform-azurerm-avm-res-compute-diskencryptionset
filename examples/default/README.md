@@ -75,7 +75,7 @@ resource "azurerm_key_vault_key" "example" {
     "wrapKey",
   ]
   key_type     = "RSA"
-  key_vault_id = module.avm-res-keyvault-vault.key_vault_id
+  key_vault_id = module.avm-res-keyvault-vault.resource_id
   name         = "des-example-key"
   key_size     = 2048
 }
@@ -86,7 +86,7 @@ module "test" {
   resource_group_name   = azurerm_resource_group.this.name
   location              = azurerm_resource_group.this.location
   key_vault_key_id      = azurerm_key_vault_key.example.id
-  key_vault_resource_id = module.avm-res-keyvault-vault.key_vault_id
+  key_vault_resource_id = module.avm-res-keyvault-vault.resource_id
 }
 
 
