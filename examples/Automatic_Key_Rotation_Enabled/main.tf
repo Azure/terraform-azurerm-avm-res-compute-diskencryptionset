@@ -1,21 +1,3 @@
-terraform {
-  required_version = "~> 1.5"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.74"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
 
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
@@ -43,12 +25,12 @@ resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
 }
 
-module "avm-res-keyvault-vault" {
+module "keyvault" {
   source                      = "Azure/avm-res-keyvault-vault/azurerm"
   version                     = "0.7.3"
-  name                        = "test-keyvault"
-  location                    = "West Europe"
-  resource_group_name         = "test-disk-encryption-set"
+  name                        = module.naming.key_vault.name_unique
+  location                    = azurerm_resource_group.this.location
+  resource_group_name         = azurerm_resource_group.this.name
   tenant_id                   = "5709bb5e-e575-4c99-ae8f-b36af76030f1"
   sku_name                    = "standard"
   enabled_for_disk_encryption = true
@@ -65,20 +47,23 @@ resource "azurerm_key_vault_key" "example" {
     "wrapKey",
   ]
   key_type     = "RSA"
-  key_vault_id = module.avm-res-keyvault-vault.resource_id
+  key_vault_id = module.keyvault.resource_id
   name         = "des-example-key"
   key_size     = 2048
 }
 
-module "test" {
+module "des" {
   source                    = "../../"
-  name                      = "test"
+  name                      = module.naming.disk_encryption_set.name_unique
+  enable_telemetry          = var.enable_telemetry
   resource_group_name       = azurerm_resource_group.this.name
   location                  = azurerm_resource_group.this.location
   key_vault_key_id          = azurerm_key_vault_key.example.id
-  key_vault_resource_id     = module.avm-res-keyvault-vault.resource_id
+  key_vault_resource_id     = module.keyvault.resource_id
   auto_key_rotation_enabled = true
-
+  managed_identities = {
+    system_assigned = true
+  }
 }
 
 
