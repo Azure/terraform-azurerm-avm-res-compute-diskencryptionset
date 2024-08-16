@@ -35,9 +35,9 @@ module "keyvault" {
   enabled_for_disk_encryption = true
   purge_protection_enabled    = false
   network_acls = {
-    bypass         = "AzureServices"
-    default_action = "Allow"
-    ip_rules       = []
+    bypass                     = "AzureServices"
+    default_action             = "Allow"
+    ip_rules                   = []
     virtual_network_subnet_ids = []
   }
 }
