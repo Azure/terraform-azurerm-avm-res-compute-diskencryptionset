@@ -28,7 +28,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
 
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
+- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3.2)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
@@ -117,22 +117,6 @@ Type: `string`
 
 Default: `null`
 
-### <a name="input_identity_ids"></a> [identity\_ids](#input\_identity\_ids)
-
-Description: A list of user-assigned identity IDs to associate with the disk encryption set.
-
-Type: `list(string)`
-
-Default: `[]`
-
-### <a name="input_identity_type"></a> [identity\_type](#input\_identity\_type)
-
-Description: The type of identity to use for the disk encryption set.
-
-Type: `string`
-
-Default: `"SystemAssigned"`
-
 ### <a name="input_lock"></a> [lock](#input\_lock)
 
 Description: Controls the Resource Lock configuration for this resource. The following properties can be specified:
@@ -166,6 +150,14 @@ Description: Controls the Managed Identity configuration on this resource. The f
 - `system_assigned` - (Optional) Specifies if the System Assigned Managed Identity should be enabled.
 - `user_assigned_resource_ids` - (Optional) Specifies a list of User Assigned Managed Identity resource IDs to be assigned to this resource.
 
+Example Input:
+
+```hcl
+managed_identities = {
+  system_assigned = true
+}
+```
+
 Type:
 
 ```hcl
@@ -177,17 +169,25 @@ object({
 
 Default: `{}`
 
+### <a name="input_tags"></a> [tags](#input\_tags)
+
+Description: (Optional) Tags of the resource.
+
+Type: `map(string)`
+
+Default: `null`
+
 ## Outputs
 
 The following outputs are exported:
 
-### <a name="output_id"></a> [id](#output\_id)
-
-Description: The ID of the disk encryption set.
-
 ### <a name="output_key_vault_key_url"></a> [key\_vault\_key\_url](#output\_key\_vault\_key\_url)
 
 Description: The ID of the disk encryption set.
+
+### <a name="output_resource"></a> [resource](#output\_resource)
+
+Description: This is the full output for the resource.
 
 ## Modules
 

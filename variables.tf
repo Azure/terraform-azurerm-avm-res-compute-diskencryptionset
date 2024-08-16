@@ -53,18 +53,6 @@ variable "federated_client_id" {
   description = " Multi-tenant application client id to access key vault in a different tenant."
 }
 
-variable "identity_ids" {
-  type        = list(string)
-  default     = [] # Optional: Set to an empty list if not using user-assigned identities
-  description = "A list of user-assigned identity IDs to associate with the disk encryption set."
-}
-
-variable "identity_type" {
-  type        = string
-  default     = "SystemAssigned" # Optional: Adjust default value based on your requirements
-  description = "The type of identity to use for the disk encryption set."
-}
-
 variable "lock" {
   type = object({
     kind = string
@@ -90,7 +78,6 @@ variable "managed_hsm_key_id" {
   description = "The Managed HSM Key ID used for encryption."
 }
 
-# tflint-ignore: terraform_unused_declarations
 variable "managed_identities" {
   type = object({
     system_assigned            = optional(bool, false)
@@ -102,6 +89,20 @@ Controls the Managed Identity configuration on this resource. The following prop
 
 - `system_assigned` - (Optional) Specifies if the System Assigned Managed Identity should be enabled.
 - `user_assigned_resource_ids` - (Optional) Specifies a list of User Assigned Managed Identity resource IDs to be assigned to this resource.
+
+Example Input:
+
+```hcl
+managed_identities = {
+  system_assigned = true
+}
+```
 DESCRIPTION
   nullable    = false
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = null
+  description = "(Optional) Tags of the resource."
 }
