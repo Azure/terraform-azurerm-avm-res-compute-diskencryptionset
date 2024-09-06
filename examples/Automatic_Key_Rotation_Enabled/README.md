@@ -4,12 +4,36 @@
 This deploys the module in its simplest form.
 
 ```hcl
+terraform {
+  required_version = "~> 1.7"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.110"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6.2"
+    }
+    modtm = {
+      source  = "azure/modtm"
+      version = "~> 0.3.2"
+    }
+  }
+}
 
+provider "azurerm" {
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
+}
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "~> 0.3"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.1.0"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -17,12 +41,11 @@ resource "random_integer" "region_index" {
   max = length(module.regions.regions) - 1
   min = 0
 }
-## End of section to provide a random Azure region for the resource group
 
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "0.3.0"
 }
 
 # This is required for resource modules
@@ -31,9 +54,10 @@ resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
 }
 
+
 module "keyvault" {
   source                      = "Azure/avm-res-keyvault-vault/azurerm"
-  version                     = "0.7.3"
+  version                     = "0.9.1"
   name                        = module.naming.key_vault.name_unique
   location                    = azurerm_resource_group.this.location
   resource_group_name         = azurerm_resource_group.this.name
@@ -83,6 +107,8 @@ The following requirements are needed by this module:
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.7)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.110)
+
+- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3.2)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.6.2)
 
@@ -135,19 +161,19 @@ Version:
 
 Source: Azure/avm-res-keyvault-vault/azurerm
 
-Version: 0.7.3
+Version: 0.9.1
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
 Source: Azure/naming/azurerm
 
-Version: ~> 0.3
+Version: 0.3.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
-Source: Azure/regions/azurerm
+Source: Azure/avm-utl-regions/azurerm
 
-Version: ~> 0.3
+Version: 0.1.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
