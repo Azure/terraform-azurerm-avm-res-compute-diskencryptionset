@@ -181,10 +181,6 @@ Default: `null`
 
 The following outputs are exported:
 
-### <a name="output_id"></a> [id](#output\_id)
-
-Description: The ID of the disk encryption set.
-
 ### <a name="output_key_vault_key_url"></a> [key\_vault\_key\_url](#output\_key\_vault\_key\_url)
 
 Description: The ID of the disk encryption set.
@@ -192,6 +188,10 @@ Description: The ID of the disk encryption set.
 ### <a name="output_resource"></a> [resource](#output\_resource)
 
 Description: This is the full output for the resource.
+
+### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
+
+Description: The ID of the disk encryption set.
 
 ## Modules
 
