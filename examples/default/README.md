@@ -7,29 +7,22 @@ This deploys the module in its simplest form.
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 terraform {
-  required_version = "~> 1.7"
+  required_version = "~> 1.9"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.110"
+      version = "~> 3.71"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.6.2"
-    }
-    modtm = {
-      source  = "azure/modtm"
-      version = "~> 0.3.2"
+      version = "~> 3.5"
     }
   }
 }
 
+
 provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
+  features {}
 }
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
@@ -111,13 +104,11 @@ module "des" {
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.7)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.9)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.110)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
 
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3.2)
-
-- <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.6.2)
+- <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
 ## Resources
 
