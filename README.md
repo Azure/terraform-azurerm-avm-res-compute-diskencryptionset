@@ -24,11 +24,11 @@ Things to do:
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.9)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71)
 
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3.2)
+- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
@@ -180,6 +180,10 @@ Default: `null`
 ## Outputs
 
 The following outputs are exported:
+
+### <a name="output_id"></a> [id](#output\_id)
+
+Description: The ID of the disk encryption set.
 
 ### <a name="output_key_vault_key_url"></a> [key\_vault\_key\_url](#output\_key\_vault\_key\_url)
 
