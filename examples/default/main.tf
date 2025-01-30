@@ -1,7 +1,7 @@
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 terraform {
-  required_version = "~> 1.9"
+  required_version = ">= 1.9, < 2.0"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
