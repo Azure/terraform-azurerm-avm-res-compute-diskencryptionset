@@ -11,6 +11,10 @@ terraform {
   required_version = "~> 1.9"
 
   required_providers {
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 2.4"
+    }
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 3.71"
@@ -109,6 +113,8 @@ module "des" {
 The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.9)
+
+- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.4)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71)
 
