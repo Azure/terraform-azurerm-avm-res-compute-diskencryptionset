@@ -2,6 +2,13 @@ terraform {
   required_version = "~> 1.9"
 
   required_providers {
+
+
+    azapi = {
+      source  = "azure/azapi"
+      version = ">=1.9.0"
+    }
+
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 3.71"
@@ -45,7 +52,7 @@ resource "azurerm_resource_group" "this" {
 
 module "keyvault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.9.1"
+  version = "0.10.1"
 
   location                    = azurerm_resource_group.this.location
   name                        = module.naming.key_vault.name_unique
