@@ -33,7 +33,7 @@ module "keyvault" {
   version = "0.10.1"
 
   location                    = azurerm_resource_group.this.location
-  name                        = q
+  name                        = module.naming.key_vault.name_unique
   resource_group_name         = azurerm_resource_group.this.name
   tenant_id                   = "5709bb5e-e575-4c99-ae8f-b36af76030f1"
   enabled_for_disk_encryption = true
