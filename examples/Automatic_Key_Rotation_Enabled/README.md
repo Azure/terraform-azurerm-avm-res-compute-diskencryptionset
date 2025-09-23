@@ -21,6 +21,16 @@ provider "azurerm" {
   features {}
 }
 
+# Get current IP address for use in KV firewall rules
+data "http" "ip" {
+  url = "https://api.ipify.org/"
+  retry {
+    attempts     = 5
+    max_delay_ms = 1000
+    min_delay_ms = 500
+  }
+}
+
 
 
 # This ensures we have unique CAF compliant names for our resources.
@@ -44,8 +54,14 @@ module "keyvault" {
   resource_group_name         = azurerm_resource_group.this.name
   tenant_id                   = "5709bb5e-e575-4c99-ae8f-b36af76030f1"
   enabled_for_disk_encryption = true
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
+  network_acls = {
+    bypass                     = "AzureServices"
+    default_action             = "Allow"
+    ip_rules                   = []
+    virtual_network_subnet_ids = []
+  }
+  purge_protection_enabled = false
+  sku_name                 = "standard"
 }
 
 resource "azurerm_key_vault_key" "example" {
@@ -96,6 +112,7 @@ The following resources are used by this module:
 
 - [azurerm_key_vault_key.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
+- [http_http.ip](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
