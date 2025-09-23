@@ -21,17 +21,6 @@ provider "azurerm" {
   features {}
 }
 
-# Get current IP address for use in KV firewall rules
-data "http" "ip" {
-  url = "https://api.ipify.org/"
-  retry {
-    attempts     = 5
-    max_delay_ms = 1000
-    min_delay_ms = 500
-  }
-}
-
-
 
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
@@ -112,7 +101,6 @@ The following resources are used by this module:
 
 - [azurerm_key_vault_key.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [http_http.ip](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
