@@ -14,6 +14,16 @@ provider "azurerm" {
   features {}
 }
 
+# Get current IP address for use in KV firewall rules
+data "http" "ip" {
+  url = "https://api.ipify.org/"
+  retry {
+    attempts     = 5
+    max_delay_ms = 1000
+    min_delay_ms = 500
+  }
+}
+
 
 
 # This ensures we have unique CAF compliant names for our resources.
@@ -39,6 +49,12 @@ module "keyvault" {
   enabled_for_disk_encryption = true
   purge_protection_enabled    = false
   sku_name                    = "standard"
+  network_acls = {
+    bypass                     = "AzureServices"
+    default_action             = "Allow"
+    ip_rules                   = []
+    virtual_network_subnet_ids = []
+  }
 }
 
 resource "azurerm_key_vault_key" "example" {
