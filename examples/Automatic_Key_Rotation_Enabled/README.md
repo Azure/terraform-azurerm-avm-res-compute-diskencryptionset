@@ -24,6 +24,10 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+# Get current client configuration for tenant_id
+data "azurerm_client_config" "current" {}
+
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
@@ -59,10 +63,16 @@ module "keyvault" {
   location                    = azurerm_resource_group.this.location
   name                        = module.naming.key_vault.name_unique
   resource_group_name         = azurerm_resource_group.this.name
-  tenant_id                   = "5709bb5e-e575-4c99-ae8f-b36af76030f1"
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
   enabled_for_disk_encryption = true
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
+  network_acls = {
+    bypass                     = "AzureServices"
+    default_action             = "Allow"
+    ip_rules                   = []
+    virtual_network_subnet_ids = []
+  }
+  purge_protection_enabled = false
+  sku_name                 = "standard"
 }
 
 resource "azurerm_key_vault_key" "example" {
@@ -116,6 +126,7 @@ The following resources are used by this module:
 - [azurerm_key_vault_key.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
