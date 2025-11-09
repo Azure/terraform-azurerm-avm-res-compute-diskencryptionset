@@ -74,7 +74,18 @@ module "keyvault" {
     virtual_network_subnet_ids = []
   }
   purge_protection_enabled = false
-  sku_name                 = "standard"
+  # Grant the current service principal Key Vault Crypto Officer role to manage keys
+  role_assignments = {
+    crypto_officer = {
+      role_definition_id_or_name = "Key Vault Crypto Officer"
+      principal_id               = data.azurerm_client_config.current.object_id
+    }
+  }
+  sku_name = "standard"
+  # Wait for RBAC propagation before creating keys
+  wait_for_rbac_before_key_operations = {
+    create = "60s"
+  }
 }
 
 resource "azurerm_key_vault_key" "example" {
@@ -90,6 +101,8 @@ resource "azurerm_key_vault_key" "example" {
   key_vault_id = module.keyvault.resource_id
   name         = "des-example-key"
   key_size     = 2048
+
+  depends_on = [module.keyvault]
 }
 
 module "des" {
