@@ -67,6 +67,22 @@ module "keyvault" {
   resource_group_name         = azurerm_resource_group.this.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   enabled_for_disk_encryption = true
+  # Create the key inside the Key Vault module to ensure proper wait for RBAC propagation
+  keys = {
+    des_example_key = {
+      name     = "des-example-key"
+      key_type = "RSA"
+      key_size = 2048
+      key_opts = [
+        "decrypt",
+        "encrypt",
+        "sign",
+        "unwrapKey",
+        "verify",
+        "wrapKey",
+      ]
+    }
+  }
   network_acls = {
     bypass                     = "AzureServices"
     default_action             = "Allow"
@@ -88,27 +104,10 @@ module "keyvault" {
   }
 }
 
-resource "azurerm_key_vault_key" "example" {
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey",
-  ]
-  key_type     = "RSA"
-  key_vault_id = module.keyvault.resource_id
-  name         = "des-example-key"
-  key_size     = 2048
-
-  depends_on = [module.keyvault]
-}
-
 module "des" {
   source = "../../"
 
-  key_vault_key_id      = azurerm_key_vault_key.example.id
+  key_vault_key_id      = module.keyvault.resource_keys["des_example_key"].resource_id
   key_vault_resource_id = module.keyvault.resource_id
   location              = azurerm_resource_group.this.location
   name                  = module.naming.disk_encryption_set.name_unique
@@ -137,7 +136,6 @@ The following requirements are needed by this module:
 
 The following resources are used by this module:
 
-- [azurerm_key_vault_key.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 - [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)

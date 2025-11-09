@@ -60,6 +60,22 @@ module "keyvault" {
   resource_group_name         = azurerm_resource_group.this.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   enabled_for_disk_encryption = true
+  # Create the key inside the Key Vault module to ensure proper wait for RBAC propagation
+  keys = {
+    des_example_key = {
+      name     = "des-example-key"
+      key_type = "RSA"
+      key_size = 2048
+      key_opts = [
+        "decrypt",
+        "encrypt",
+        "sign",
+        "unwrapKey",
+        "verify",
+        "wrapKey",
+      ]
+    }
+  }
   network_acls = {
     bypass                     = "AzureServices"
     default_action             = "Allow"
@@ -81,27 +97,10 @@ module "keyvault" {
   }
 }
 
-resource "azurerm_key_vault_key" "example" {
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey",
-  ]
-  key_type     = "RSA"
-  key_vault_id = module.keyvault.resource_id
-  name         = "des-example-key"
-  key_size     = 2048
-
-  depends_on = [module.keyvault]
-}
-
 module "des" {
   source = "../../"
 
-  key_vault_key_id      = azurerm_key_vault_key.example.id
+  key_vault_key_id      = module.keyvault.resource_keys["des_example_key"].resource_id
   key_vault_resource_id = module.keyvault.resource_id
   location              = azurerm_resource_group.this.location
   name                  = module.naming.disk_encryption_set.name_unique
