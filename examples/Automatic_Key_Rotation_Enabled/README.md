@@ -105,7 +105,7 @@ module "keyvault" {
 module "des" {
   source = "../../"
 
-  key_vault_key_id          = module.keyvault.keys_resource_ids["des_example_key"]
+  key_vault_key_id          = module.keyvault.keys_resource_ids["des_example_key"].resource_id
   key_vault_resource_id     = module.keyvault.resource_id
   location                  = azurerm_resource_group.this.location
   name                      = module.naming.disk_encryption_set.name_unique
