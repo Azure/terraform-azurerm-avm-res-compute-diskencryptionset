@@ -77,10 +77,8 @@ module "keyvault" {
     }
   }
   network_acls = {
-    bypass                     = "AzureServices"
-    default_action             = "Allow"
-    ip_rules                   = []
-    virtual_network_subnet_ids = []
+    bypass         = "AzureServices"
+    default_action = "Allow"
   }
   purge_protection_enabled = false
   # Grant the current service principal Key Vault Crypto Officer role to manage keys
