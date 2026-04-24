@@ -19,6 +19,8 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+data "azurerm_client_config" "current" {}
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
@@ -52,7 +54,7 @@ module "keyvault" {
   location                    = azurerm_resource_group.this.location
   name                        = module.naming.key_vault.name_unique
   resource_group_name         = azurerm_resource_group.this.name
-  tenant_id                   = "5709bb5e-e575-4c99-ae8f-b36af76030f1"
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
   enabled_for_disk_encryption = true
   network_acls = {
     bypass                     = "AzureServices"
