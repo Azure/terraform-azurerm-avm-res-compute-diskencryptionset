@@ -24,7 +24,8 @@ resource "azurerm_disk_encryption_set" "this" {
     for_each = local.managed_identities.system_assigned_only
 
     content {
-      type = identity.value.type
+      type         = identity.value.type
+      identity_ids = []
     }
   }
   dynamic "identity" {
