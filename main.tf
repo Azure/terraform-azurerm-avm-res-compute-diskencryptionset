@@ -18,10 +18,18 @@ resource "azurerm_disk_encryption_set" "this" {
   federated_client_id       = var.federated_client_id
   key_vault_key_id          = var.key_vault_key_id
   managed_hsm_key_id        = var.managed_hsm_key_id
-  tags                      = var.tags
+  tags                      = var.tags == null ? {} : var.tags
 
   dynamic "identity" {
-    for_each = local.managed_identities.system_assigned_user_assigned
+    for_each = local.managed_identities.system_assigned_only
+
+    content {
+      type = identity.value.type
+    }
+  }
+
+  dynamic "identity" {
+    for_each = local.managed_identities.includes_user_assigned
 
     content {
       type         = identity.value.type
