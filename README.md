@@ -120,6 +120,14 @@ Type: `string`
 
 Default: `null`
 
+### <a name="input_key_vault_role_assignment_enabled"></a> [key\_vault\_role\_assignment\_enabled](#input\_key\_vault\_role\_assignment\_enabled)
+
+Description: Whether to create a role assignment for the Key Vault. Set to `false` if you are using access policies instead of role assignments.
+
+Type: `bool`
+
+Default: `true`
+
 ### <a name="input_lock"></a> [lock](#input\_lock)
 
 Description: Controls the Resource Lock configuration for this resource. The following properties can be specified:

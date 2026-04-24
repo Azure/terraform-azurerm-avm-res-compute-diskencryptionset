@@ -30,7 +30,15 @@ resource "azurerm_disk_encryption_set" "this" {
   }
 }
 resource "azurerm_role_assignment" "this" {
+  count = var.key_vault_role_assignment_enabled ? 1 : 0
+
   principal_id         = azurerm_disk_encryption_set.this.identity[0].principal_id
   scope                = var.key_vault_resource_id #keyvault id
   role_definition_name = "Key Vault Crypto Service Encryption User"
+}
+
+
+moved {
+  from = azurerm_role_assignment.this
+  to   = azurerm_role_assignment.this[0]
 }
