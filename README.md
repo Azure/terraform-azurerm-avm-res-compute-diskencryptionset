@@ -196,10 +196,6 @@ The following outputs are exported:
 
 Description: The ID of the disk encryption set.
 
-### <a name="output_resource"></a> [resource](#output\_resource)
-
-Description: This is the full output for the resource.
-
 ### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
 
 Description: The ID of the disk encryption set.

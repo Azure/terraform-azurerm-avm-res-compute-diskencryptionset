@@ -155,11 +155,7 @@ Default: `false`
 
 ## Outputs
 
-The following outputs are exported:
-
-### <a name="output_resource"></a> [resource](#output\_resource)
-
-Description: This is the full output for the resource.
+No outputs.
 
 ## Modules
 
