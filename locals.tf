@@ -18,5 +18,16 @@ locals {
         user_assigned_resource_ids = var.managed_identities.user_assigned_resource_ids
       }
     } : {}
+    system_assigned_only = var.managed_identities.system_assigned && length(var.managed_identities.user_assigned_resource_ids) == 0 ? {
+      this = {
+        type = "SystemAssigned"
+      }
+    } : {}
+    includes_user_assigned = length(var.managed_identities.user_assigned_resource_ids) > 0 ? {
+      this = {
+        type                       = var.managed_identities.system_assigned ? "SystemAssigned, UserAssigned" : "UserAssigned"
+        user_assigned_resource_ids = var.managed_identities.user_assigned_resource_ids
+      }
+    } : {}
   }
 }
