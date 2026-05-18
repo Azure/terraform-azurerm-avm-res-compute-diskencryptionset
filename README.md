@@ -58,12 +58,6 @@ Description: The Key Vault Key ID used for encryption.
 
 Type: `string`
 
-### <a name="input_key_vault_resource_id"></a> [key\_vault\_resource\_id](#input\_key\_vault\_resource\_id)
-
-Description: The resource ID of the Key Vault to associate with the disk encryption set.
-
-Type: `string`
-
 ### <a name="input_location"></a> [location](#input\_location)
 
 Description: Azure region where the resource should be deployed.
@@ -94,6 +88,14 @@ Type: `bool`
 
 Default: `false`
 
+### <a name="input_enable_automatic_role_assignment"></a> [enable\_automatic\_role\_assignment](#input\_enable\_automatic\_role\_assignment)
+
+Description: Whether to automatically create the `Key Vault Crypto Service Encryption User` role assignment for the disk encryption set identity.
+
+Type: `bool`
+
+Default: `true`
+
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
 Description: This variable controls whether or not telemetry is enabled for the module.  
@@ -115,6 +117,14 @@ Default: `"EncryptionAtRestWithCustomerKey"`
 ### <a name="input_federated_client_id"></a> [federated\_client\_id](#input\_federated\_client\_id)
 
 Description:  Multi-tenant application client id to access key vault in a different tenant.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_key_vault_resource_id"></a> [key\_vault\_resource\_id](#input\_key\_vault\_resource\_id)
+
+Description: The resource ID of the Key Vault to associate with the disk encryption set. Required when `enable_automatic_role_assignment` is `true`.
 
 Type: `string`
 

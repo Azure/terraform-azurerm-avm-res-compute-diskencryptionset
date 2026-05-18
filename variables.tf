@@ -5,7 +5,14 @@ variable "key_vault_key_id" {
 
 variable "key_vault_resource_id" {
   type        = string
-  description = "The resource ID of the Key Vault to associate with the disk encryption set."
+  default     = null
+  description = "The resource ID of the Key Vault to associate with the disk encryption set. Required when `enable_automatic_role_assignment` is `true`."
+}
+
+variable "enable_automatic_role_assignment" {
+  type        = bool
+  default     = true
+  description = "Whether to automatically create the `Key Vault Crypto Service Encryption User` role assignment for the disk encryption set identity."
 }
 
 variable "location" {
