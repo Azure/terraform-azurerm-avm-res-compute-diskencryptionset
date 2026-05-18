@@ -53,6 +53,12 @@ variable "federated_client_id" {
   description = " Multi-tenant application client id to access key vault in a different tenant."
 }
 
+variable "key_vault_role_assignment_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether to create a role assignment for the Key Vault. Set to `false` if you are using access policies instead of role assignments."
+}
+
 variable "lock" {
   type = object({
     kind = string

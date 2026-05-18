@@ -6,7 +6,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.71"
+      version = "~> 4.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -19,11 +19,13 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+data "azurerm_client_config" "current" {}
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.1.0"
+  version = "0.12.0"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -35,7 +37,7 @@ resource "random_integer" "region_index" {
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.3.0"
+  version = "0.4.3"
 }
 
 # This is required for resource modules
@@ -47,13 +49,28 @@ resource "azurerm_resource_group" "this" {
 
 module "keyvault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.9.1"
+  version = "0.10.2"
 
   location                    = azurerm_resource_group.this.location
   name                        = module.naming.key_vault.name_unique
   resource_group_name         = azurerm_resource_group.this.name
-  tenant_id                   = "5709bb5e-e575-4c99-ae8f-b36af76030f1"
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
   enabled_for_disk_encryption = true
+  keys = {
+    des-example-key = {
+      key_type = "RSA"
+      key_size = 2048
+      name     = "des-example-key"
+      key_opts = [
+        "decrypt",
+        "encrypt",
+        "sign",
+        "unwrapKey",
+        "verify",
+        "wrapKey",
+      ]
+    }
+  }
   network_acls = {
     bypass                     = "AzureServices"
     default_action             = "Allow"
@@ -61,28 +78,23 @@ module "keyvault" {
     virtual_network_subnet_ids = []
   }
   purge_protection_enabled = false
-  sku_name                 = "standard"
+  role_assignments = {
+    deployer = {
+      role_definition_id_or_name = "Key Vault Administrator"
+      principal_id               = data.azurerm_client_config.current.object_id
+    }
+  }
+  sku_name = "standard"
+  wait_for_rbac_before_key_operations = {
+    create = "60s"
+  }
 }
 
-resource "azurerm_key_vault_key" "example" {
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey",
-  ]
-  key_type     = "RSA"
-  key_vault_id = module.keyvault.resource_id
-  name         = "des-example-key"
-  key_size     = 2048
-}
 
 module "des" {
   source = "../../"
 
-  key_vault_key_id      = azurerm_key_vault_key.example.id
+  key_vault_key_id      = module.keyvault.keys_resource_ids["des-example-key"].id
   key_vault_resource_id = module.keyvault.resource_id
   location              = azurerm_resource_group.this.location
   name                  = module.naming.disk_encryption_set.name_unique

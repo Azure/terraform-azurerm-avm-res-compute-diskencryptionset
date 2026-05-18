@@ -29,7 +29,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.4)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
 
 - <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
 
@@ -120,6 +120,14 @@ Type: `string`
 
 Default: `null`
 
+### <a name="input_key_vault_role_assignment_enabled"></a> [key\_vault\_role\_assignment\_enabled](#input\_key\_vault\_role\_assignment\_enabled)
+
+Description: Whether to create a role assignment for the Key Vault. Set to `false` if you are using access policies instead of role assignments.
+
+Type: `bool`
+
+Default: `true`
+
 ### <a name="input_lock"></a> [lock](#input\_lock)
 
 Description: Controls the Resource Lock configuration for this resource. The following properties can be specified:
@@ -187,10 +195,6 @@ The following outputs are exported:
 ### <a name="output_key_vault_key_url"></a> [key\_vault\_key\_url](#output\_key\_vault\_key\_url)
 
 Description: The ID of the disk encryption set.
-
-### <a name="output_resource"></a> [resource](#output\_resource)
-
-Description: This is the full output for the resource.
 
 ### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
 

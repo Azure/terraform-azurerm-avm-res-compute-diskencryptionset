@@ -18,10 +18,18 @@ resource "azurerm_disk_encryption_set" "this" {
   federated_client_id       = var.federated_client_id
   key_vault_key_id          = var.key_vault_key_id
   managed_hsm_key_id        = var.managed_hsm_key_id
-  tags                      = var.tags
+  tags                      = var.tags == null ? {} : var.tags
 
   dynamic "identity" {
-    for_each = local.managed_identities.system_assigned_user_assigned
+    for_each = local.managed_identities.system_assigned_only
+
+    content {
+      type         = identity.value.type
+      identity_ids = []
+    }
+  }
+  dynamic "identity" {
+    for_each = local.managed_identities.includes_user_assigned
 
     content {
       type         = identity.value.type
@@ -30,7 +38,15 @@ resource "azurerm_disk_encryption_set" "this" {
   }
 }
 resource "azurerm_role_assignment" "this" {
+  count = var.key_vault_role_assignment_enabled ? 1 : 0
+
   principal_id         = azurerm_disk_encryption_set.this.identity[0].principal_id
   scope                = var.key_vault_resource_id #keyvault id
   role_definition_name = "Key Vault Crypto Service Encryption User"
+}
+
+
+moved {
+  from = azurerm_role_assignment.this
+  to   = azurerm_role_assignment.this[0]
 }
