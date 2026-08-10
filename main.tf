@@ -1,4 +1,3 @@
-
 # required AVM resources interfaces
 resource "azurerm_management_lock" "this" {
   count = var.lock != null ? 1 : 0
@@ -37,6 +36,7 @@ resource "azurerm_disk_encryption_set" "this" {
     }
   }
 }
+
 resource "azurerm_role_assignment" "this" {
   count = var.key_vault_role_assignment_enabled ? 1 : 0
 
@@ -44,7 +44,6 @@ resource "azurerm_role_assignment" "this" {
   scope                = var.key_vault_resource_id #keyvault id
   role_definition_name = "Key Vault Crypto Service Encryption User"
 }
-
 
 moved {
   from = azurerm_role_assignment.this
