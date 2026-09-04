@@ -22,12 +22,12 @@ terraform {
   }
 }
 
-
 provider "azurerm" {
   features {}
 }
 
 data "azurerm_client_config" "current" {}
+
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
@@ -52,7 +52,6 @@ resource "azurerm_resource_group" "this" {
   location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
 }
-
 
 module "keyvault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
@@ -97,7 +96,6 @@ module "keyvault" {
   }
 }
 
-
 module "des" {
   source = "../../"
 
@@ -111,8 +109,6 @@ module "des" {
     system_assigned = true
   }
 }
-
-
 ```
 
 <!-- markdownlint-disable MD033 -->
