@@ -34,7 +34,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 # This allows us to randomize the region for the resource group.
@@ -63,7 +63,7 @@ module "keyvault" {
   name                        = module.naming.key_vault.name_unique
   resource_group_name         = azurerm_resource_group.this.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
-  enable_telemetry            = false
+  enable_telemetry            = var.enable_telemetry
   enabled_for_disk_encryption = true
   keys = {
     des-example-key = {
@@ -107,7 +107,7 @@ module "des" {
   location              = azurerm_resource_group.this.location
   name                  = module.naming.disk_encryption_set.name_unique
   resource_group_name   = azurerm_resource_group.this.name
-  enable_telemetry      = false
+  enable_telemetry      = var.enable_telemetry
   managed_identities = {
     system_assigned = true
   }
