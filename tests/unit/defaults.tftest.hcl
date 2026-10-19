@@ -1,16 +1,13 @@
 mock_provider "azapi" {
   alias = "mock"
+  mock_data "azapi_client_config" {
+    defaults = {
+      subscription_resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000"
+    }
+  }
 }
 
 mock_provider "azurerm" {
-  alias = "mock"
-}
-
-mock_provider "modtm" {
-  alias = "mock"
-}
-
-mock_provider "random" {
   alias = "mock"
 }
 
@@ -33,8 +30,8 @@ run "no_lock" {
   providers = {
     azapi   = azapi.mock
     azurerm = azurerm.mock
-    modtm   = modtm.mock
-    random  = random.mock
+
+
   }
 
   assert {
@@ -49,8 +46,8 @@ run "default_delete_lock" {
   providers = {
     azapi   = azapi.mock
     azurerm = azurerm.mock
-    modtm   = modtm.mock
-    random  = random.mock
+
+
   }
 
   variables {
@@ -76,8 +73,8 @@ run "default_read_only_lock" {
   providers = {
     azapi   = azapi.mock
     azurerm = azurerm.mock
-    modtm   = modtm.mock
-    random  = random.mock
+
+
   }
 
   variables {
@@ -98,8 +95,8 @@ run "key_rotation" {
   providers = {
     azapi   = azapi.mock
     azurerm = azurerm.mock
-    modtm   = modtm.mock
-    random  = random.mock
+
+
   }
 
   variables {
@@ -118,8 +115,8 @@ run "user_assigned_identity" {
   providers = {
     azapi   = azapi.mock
     azurerm = azurerm.mock
-    modtm   = modtm.mock
-    random  = random.mock
+
+
   }
 
   variables {
@@ -140,8 +137,8 @@ run "invalid_kind" {
   providers = {
     azapi   = azapi.mock
     azurerm = azurerm.mock
-    modtm   = modtm.mock
-    random  = random.mock
+
+
   }
 
   variables {
