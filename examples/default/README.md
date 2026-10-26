@@ -68,7 +68,7 @@ resource "azurerm_resource_group" "this" {
 
 module "keyvault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.10.2"
+  version = "0.12.0"
 
   location                    = azurerm_resource_group.this.location
   name                        = module.naming.key_vault.name_unique
@@ -193,7 +193,7 @@ Version:
 
 Source: Azure/avm-res-keyvault-vault/azurerm
 
-Version: 0.10.2
+Version: 0.12.0
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
