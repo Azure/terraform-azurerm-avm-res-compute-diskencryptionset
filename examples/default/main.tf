@@ -65,7 +65,6 @@ module "keyvault" {
 
   location                    = azurerm_resource_group.this.location
   name                        = module.naming.key_vault.name_unique
-  resource_group_name         = azurerm_resource_group.this.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   enable_telemetry            = var.enable_telemetry
   enabled_for_disk_encryption = true
@@ -101,6 +100,7 @@ module "keyvault" {
   wait_for_rbac_before_key_operations = {
     create = "60s"
   }
+  resource_group_name = azurerm_resource_group.this.name
 }
 
 module "des" {
