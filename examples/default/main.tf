@@ -13,11 +13,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 4.0"
     }
-    # tflint-ignore: terraform_unused_required_providers
-    modtm = {
-      source  = "registry.terraform.io/azure/modtm"
-      version = "~> 0.3"
-    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.5"
@@ -35,7 +30,7 @@ data "azurerm_client_config" "current" {}
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.13.0"
+  version = "0.13.2"
 
   location         = var.location
   enable_telemetry = var.enable_telemetry
@@ -50,7 +45,7 @@ resource "random_integer" "region_index" {
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/avm-utl-naming/azure"
-  version = "0.2.0"
+  version = "0.3.0"
 }
 
 # This is required for resource modules
@@ -61,11 +56,11 @@ resource "azurerm_resource_group" "this" {
 
 module "keyvault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.10.2"
+  version = "0.13.1"
 
   location                    = azurerm_resource_group.this.location
   name                        = module.naming.key_vault.name_unique
-  resource_group_name         = azurerm_resource_group.this.name
+  parent_id                   = azurerm_resource_group.this.id
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   enable_telemetry            = var.enable_telemetry
   enabled_for_disk_encryption = true
